@@ -5,10 +5,6 @@ import { HomeComponent } from './home/home/home.component';
 
 export const routes: Routes = [
   {
-    path: 'app-root',
-    component: AppComponent, // Componente del home
-  },
-  {
     path: '', // Ruta vacía redirige a Home
     redirectTo: 'home',
     pathMatch: 'full',
@@ -18,17 +14,17 @@ export const routes: Routes = [
     component: HomeComponent, // Ruta para el componente de Home
   },
   {
-    canActivateChild: [publicGuard()],
+    canActivateChild: [publicGuard()], // Guardia que protege la ruta, permitiendo el acceso solo si se cumplen las condiciones.
     path: 'auth',
-    loadChildren: () => import('./auth/components/auth.routes'),
+    loadChildren: () => import('./auth/components/auth.routes'), // Carga las rutas hijas desde auth.routes de forma asíncrona.
   },
   {
-    canActivateChild: [privateGuard()],
+    canActivateChild: [privateGuard()], // Este guardia asegura que solo los usuarios autenticados puedan acceder a esta ruta.
     path: 'userpage',
-    loadChildren: () => import('./user/userpage/userpage.routes'),
+    loadChildren: () => import('./user/userpage/userpage.routes'), // Carga las rutas hijas desde userpage.routes de forma asíncrona.
   },
   {
-    path: '**',
-    redirectTo: '',
+    path: '**', //  Ruta "comodin" que se utiliza para capturar cualquier ruta que no exista. Aquí podríamos manejar un componente Not Found 404.
+    redirectTo: '', // Redirige a la ruta vacía, que a su vez redirige a /home.
   }
 ];
