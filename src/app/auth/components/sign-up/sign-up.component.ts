@@ -23,6 +23,7 @@ interface FormSignUp {
   templateUrl: 'sign-up.component.html'
 })
 export class SignUpComponent {
+[x: string]: any;
   // Inyección de dependencias para utilizar los servicios necesarios.
   private _formBuilder = inject(FormBuilder); 
   private _authService = inject(AuthService);
@@ -57,8 +58,17 @@ export class SignUpComponent {
 
     // Desestructura los valores del formulario
     const { firstName, lastName, email, password } = this.form.value;
+
     // Verifica que los campos no sean nulos
     if (!email || !password || !firstName || !lastName) return;
+
+    // Verifica si el usuario existe en la base de datos de Firestore
+    const userExists = await this._authService.checkUserExists(email);
+
+    if (userExists) {
+      toast.error('El usuario ya existe. Por favor, inicia sesión.');
+      return;
+    }
 
     try {
       // Intenta registrar al usuario utilizando el servicio de autenticación

@@ -29,6 +29,7 @@ export default class SingInComponent {
   private _authService = inject(AuthService); // Servicio de autenticación personalizado que maneja las acciones de autenticación.
   private _router = inject(Router); // Router para la navegación entre diferentes rutas en la aplicación.
   private _dialog = inject(MatDialog); // MatDialog para mostrar diálogos modales, como el de crear cuenta.
+userExists: any;
 
   /**
    * Verifica si un campo específico del formulario es requerido y no está completo.

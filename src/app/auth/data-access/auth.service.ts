@@ -6,7 +6,7 @@ import {
   signInWithPopup, 
   GoogleAuthProvider, 
   UserCredential } from '@angular/fire/auth';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { collection, doc, Firestore, getDocs, query, setDoc, where } from '@angular/fire/firestore';
 
 // Definimos nuestra interfaz "User", que será utilizada para estructurar los datos del usuario.
 export interface User {
@@ -88,6 +88,25 @@ export class AuthService {
     
     // Llamada a Firebase Authentication para iniciar sesión con el popup de Google.
     return signInWithPopup(this._auth, provider);
+  }
+
+  /**
+   * Método para verificar si el usuario ya está registrado en Firestore.
+   * @param email - El correo electrónico del usuario que se va a verificar.
+   * @returns Una promesa que se resuelve con un valor booleano, `true` si el usuario existe, `false` si no existe.
+   */
+  async checkUserExists(email: string): Promise<boolean> {
+    // Referencia a la colección de usuarios en Firestore.
+    const usersRef = collection(this._firestore, 'users');
+
+    // Creamos una consulta para buscar usuarios cuyo campo 'email' coincida con el proporcionado.
+    const q = query(usersRef, where('email', '==', email));
+
+    // Ejecutamos la consulta y obtenemos los documentos que coincidan.
+    const querySnapshot = await getDocs(q);
+
+    // Si hay al menos un documento, significa que el usuario ya existe.
+    return !querySnapshot.empty;
   }
 
 } // :)
